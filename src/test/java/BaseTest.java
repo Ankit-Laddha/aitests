@@ -11,11 +11,19 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import ru.stqa.selenium.factory.WebDriverPool;
 
 import java.util.List;
 
 public class BaseTest {
+
+    protected final String hackathonV1 = "https://demo.applitools.com/hackathon.html";
+
+    protected final String hackathonV2 = "https://demo.applitools.com/hackathonV2.html";
+
+    protected String baseUrl = hackathonV1;
 
     protected WebDriver driver;
 
@@ -29,6 +37,18 @@ public class BaseTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void openLoginPage() {
+        driver.get(hackathonV1);
+        sleep(2000);
+    }
+
+    protected void login() {
+        enterText(findElement(By.id("username")), "a");
+        enterText(findElement(By.id("password")), "b");
+        findElement(By.id("log-in")).click();
+        sleep(1500);
     }
 
     protected WebElement findElement(By by) {
@@ -67,21 +87,22 @@ public class BaseTest {
         element.sendKeys(value);
     }
 
+    @Parameters({"version"})
     @BeforeSuite
-    public void beforeSuite() {
-    }
-
-    @BeforeSuite
-    public void setup() {
+    public void setup(@Optional("v1") String version) {
         WebDriverManager.chromedriver().setup();
         driver = WebDriverPool.DEFAULT.getDriver(new ChromeOptions());
         driver.manage().window().fullscreen();
         softAssert = new SoftAssertions();
-        //ClassicRunner runner = new ClassicRunner();
+
+        if(version.equalsIgnoreCase("v1"))
+            baseUrl = hackathonV1;
+        else if (version.equalsIgnoreCase("v2"))
+            baseUrl = hackathonV2;
+
         eyes = new Eyes();
-        // This is your api key, make sure you use it in all your tests.
         eyes.setApiKey("9QF54IRHkSfE109GSWNLMWlB5cYOLPEwplwoBnd8dSxLo110");
-        //eyes.setBatch(new BatchInfo("Hackathon Tests"));
+
     }
 
     @AfterSuite

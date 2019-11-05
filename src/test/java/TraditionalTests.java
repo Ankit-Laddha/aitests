@@ -12,21 +12,7 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class TraditionalTests extends BaseTest {
 
-    final String hackathonV1 = "https://demo.applitools.com/hackathon.html";
 
-    final String hackathonV2 = "https://demo.applitools.com/hackathonV2.html";
-
-    private void openLoginPage() {
-        driver.get(hackathonV1);
-        sleep(2000);
-    }
-
-    private void login() {
-        enterText(findElement(By.id("username")), "a");
-        enterText(findElement(By.id("password")), "b");
-        findElement(By.id("log-in")).click();
-        sleep(1500);
-    }
 
     @Test
     public void loginUITest() {
@@ -168,6 +154,7 @@ public class TraditionalTests extends BaseTest {
 
         assertTrue(amount.equals(amountNew));
 
+        // Make sure sorting is across row and not only applied to the column
         afterSorting.forEach(p ->
         {
             if (!beforeSorting.contains(p))

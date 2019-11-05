@@ -10,16 +10,7 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class VisualAITests extends BaseTest {
 
-    final String hackathonV2 = "https://demo.applitools.com/hackathon.html";
-
-    final String hackathonV1 = "https://demo.applitools.com/hackathonV2.html";
-
     BatchInfo batch;
-
-    private void openLoginPage() {
-        driver.get(hackathonV1);
-        sleep(2000);
-    }
 
     @BeforeClass
     public void setupThisClass() {
@@ -54,13 +45,6 @@ public class VisualAITests extends BaseTest {
 
         eyes.checkWindow("Error Messages");
         eyes.close();
-    }
-
-    private void login() {
-        enterText(findElement(By.id("username")), "a");
-        enterText(findElement(By.id("password")), "b");
-        findElement(By.id("log-in")).click();
-        sleep(1500);
     }
 
     @Test
