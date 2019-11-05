@@ -186,7 +186,7 @@ public class TraditionalTests extends BaseTest {
 
     @Test
     public void dynamicAdTest() {
-        driver.get(hackathonV1 + "?showAd=true");
+        driver.get(baseUrl + "?showAd=true");
         sleep(2000);
 
         login();
