@@ -94,8 +94,7 @@ public class BaseTest {
         softAssert = new SoftAssertions();
 
         eyes = new Eyes();
-        eyes.setApiKey("9QF54IRHkSfE109GSWNLMWlB5cYOLPEwplwoBnd8dSxLo110");
-
+        eyes.setApiKey(System.getenv("APPILIKEY"));
     }
 
     @AfterSuite
