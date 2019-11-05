@@ -6,7 +6,3 @@
 3. By default test will run against version1 of the app, to run against version2 of app, 
 simply goto BaseTest.java file and change assignment of baseUrl to `baseUrl= hackathonV2;`
 4. Open any of the test file and directly run those tests from your IDE
-
-  
-
-

@@ -191,13 +191,6 @@ public class TraditionalTests extends BaseTest {
 
         login();
 
-        /*softAssert.assertThat(findElement(By.id("flashSalee"))).isInstanceOf(WebElement.class).as("Flash");
-        softAssert.assertThat(findElement(By.cssSelector("div#flashSale > imge"))).isInstanceOf(WebElement.class).as
-        ("Flash img");
-        softAssert.assertThat(findElement(By.cssSelector("div#flashSale > img")).getAttribute("src")).isNotEmpty().as
-        ("Empty");
-*/
-
         softAssert.assertThat(findElement(By.id("flashSale")) instanceof WebElement);
         softAssert.assertThat(findElement(By.cssSelector("div#flashSale > img")) instanceof WebElement);
         softAssert.assertThat(findElement(By.cssSelector("div#flashSale > img")).getAttribute("src").isEmpty());
