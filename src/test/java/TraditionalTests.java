@@ -12,8 +12,6 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class TraditionalTests extends BaseTest {
 
-
-
     @Test
     public void loginUITest() {
 
