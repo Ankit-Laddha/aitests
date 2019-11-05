@@ -38,7 +38,7 @@ public class BaseTest {
     }
 
     protected void openLoginPage() {
-        driver.get(hackathonV1);
+        driver.get(baseUrl);
         sleep(2000);
     }
 
