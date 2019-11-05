@@ -11,8 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import ru.stqa.selenium.factory.WebDriverPool;
 
 import java.util.List;
@@ -87,18 +85,13 @@ public class BaseTest {
         element.sendKeys(value);
     }
 
-    @Parameters({"version"})
+
     @BeforeSuite
-    public void setup(@Optional("v1") String version) {
+    public void setup() {
         WebDriverManager.chromedriver().setup();
         driver = WebDriverPool.DEFAULT.getDriver(new ChromeOptions());
         driver.manage().window().fullscreen();
         softAssert = new SoftAssertions();
-
-        if(version.equalsIgnoreCase("v1"))
-            baseUrl = hackathonV1;
-        else if (version.equalsIgnoreCase("v2"))
-            baseUrl = hackathonV2;
 
         eyes = new Eyes();
         eyes.setApiKey("9QF54IRHkSfE109GSWNLMWlB5cYOLPEwplwoBnd8dSxLo110");
