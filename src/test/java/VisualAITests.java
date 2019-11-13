@@ -1,22 +1,11 @@
 import com.applitools.eyes.BatchInfo;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.applitools.eyes.Region;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.testng.AssertJUnit.assertTrue;
-
 public class VisualAITests extends BaseTest {
-
-    BatchInfo batch;
-
-    @BeforeClass
-    public void setupThisClass() {
-        batch = new BatchInfo("Hackathon-Batch");
-        eyes.setBatch(batch);
-    }
 
     @DataProvider(name = "loginData")
     private static Object[][] credentials() {
@@ -28,83 +17,114 @@ public class VisualAITests extends BaseTest {
                 {"username1", "password1", ""}};
     }
 
-    @Test(dataProvider = "loginData")
-    public void dataDrivenTest(String username, String password, String errorMsg) {
-        openLoginPage();
-        String generatedString = RandomStringUtils.randomAlphanumeric(3);
-        eyes.open(driver, "Hackathon App", "Data-Driven-login-Test-name");
-
-        enterText(findElement(By.id("username")), username);
-        enterText(findElement(By.id("password")), password);
-        findElement(By.id("log-in")).click();
-
-        if (!username.isEmpty() && !password.isEmpty()) {
-            assertTrue(findElement(By.id("showExpensesChart")) instanceof WebElement);
-            return;
-        }
-
-        eyes.checkWindow("Error Messages");
-        eyes.close();
+    public void openEyes(String testName) {
+        eyes.setBatch(new BatchInfo(String.format("%s-Batch", testName)));
+        eyes.open(driver, appName, testName);
     }
 
+    //Using this specifically for data-driven tests for better naming and understanding purpose
+    public void openEyes(String testName, String id) {
+        BatchInfo batch = new BatchInfo("Login-Test-Batch");
+        batch.setId(id);
+        eyes.setBatch(batch);
+        eyes.open(driver, appName, testName);
+    }
+    // start-region All Tests
+
     @Test
-    public void loginUITest() {
+    public void loginPageUITest() {
+        try {
+            openEyes("loginPageUITest");
+            openLoginPage();
+            eyes.checkWindow("Check-login-page-layout");
+            eyes.close();
+        } finally {
+            eyes.abortIfNotClosed();
+        }
 
-        openLoginPage();
-        eyes.open(driver, "Hackathon App", "login-UI-Test-name");
+    }
 
-        eyes.checkWindow("Home view");
-        eyes.close();
+    @Test(dataProvider = "loginData")
+    public void dataDrivenLoginTests(String username, String password, String errorMsg) {
+        try {
+            openEyes("TestLogin-" + errorMsg.replace(" ", "-"), "param");
+            openLoginPage();
+
+            enterText(findElement(By.id("username")), username);
+            enterText(findElement(By.id("password")), password);
+            findElement(By.id("log-in")).click();
+
+            if (!username.isEmpty() && !password.isEmpty()) {
+                // Check-successful-login
+                eyes.checkRegion(new Region(14, 62, 172, 58), -1, "Check-successful-login");
+                return;
+            }
+            eyes.checkWindow("Check-Error-Messages");
+            eyes.close();
+        } finally {
+            eyes.abortIfNotClosed();
+        }
     }
 
     @Test
     public void tableSortTest() {
-        openLoginPage();
-        login();
-        eyes.open(driver, "tableSortTest App", "tableSortTest");
-        eyes.checkWindow("Window with transaction table view before Sorting");
+        try {
+            openEyes("tableSortTest");
+            eyes.setForceFullPageScreenshot(true);
+            openLoginPage();
+            login();
+            eyes.checkWindow("Transaction-table-view-before-sorting");
 
-        WebElement amountCol = waitFor(By.id("amount"));
-        amountCol.click();
-        sleep(2000);
+            WebElement amountCol = waitFor(By.id("amount"));
+            amountCol.click();
+            sleep(2000);
 
-        eyes.checkWindow("Window with transaction table view after Sorting");
-
-        eyes.close();
+            eyes.checkWindow("Transaction-table-view-after-sorting");
+            eyes.close();
+        } finally {
+            eyes.abortIfNotClosed();
+        }
 
     }
 
     @Test
-    public void cavasTest() {
-        openLoginPage();
-        login();
+    public void canvasTest() {
+        try {
+            openEyes("canvasTest");
+            openLoginPage();
+            login();
 
-        WebElement expenseLink = waitFor(By.id("showExpensesChart"));
+            WebElement expenseLink = waitFor(By.id("showExpensesChart"));
+            expenseLink.click();
 
-        expenseLink.click();
+            eyes.checkWindow("Charts-before-adding-data-set");
 
-        eyes.open(driver, "cavasTest App", "cavasTest");
-        eyes.checkWindow("Charts before adding data set");
+            findElement(By.id("addDataset")).click();
 
-        findElement(By.id("addDataset")).click();
+            sleep(1000);
 
-        sleep(1000);
+            eyes.checkWindow("Charts-after-adding-data-set");
+            eyes.close();
 
-        eyes.checkWindow("Charts after adding data set");
-        eyes.close();
+        } finally {
+            eyes.abortIfNotClosed();
+        }
 
     }
 
     @Test
     public void dynamicAdTest() {
-        driver.get(baseUrl + "?showAd=true");
-        sleep(2000);
-
-        login();
-
-        eyes.open(driver, "dynamicAdTest App", "dynamicAdTest");
-        eyes.checkWindow("Dyanamic Add window");
-
-        eyes.close();
+        try {
+            openEyes("dynamicAdTest");
+            //driver.get(baseUrl + "?showAd=true");
+            openPage("?showAd=true");
+            login();
+            eyes.checkWindow("Check-Dynamic-Add-window");
+            eyes.close();
+        } finally {
+            eyes.abortIfNotClosed();
+        }
     }
+
+    // end-region All Tests
 }
