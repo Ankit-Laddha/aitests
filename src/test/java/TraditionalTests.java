@@ -13,7 +13,7 @@ import static org.testng.AssertJUnit.assertTrue;
 public class TraditionalTests extends BaseTest {
 
     @Test
-    public void loginUITest() {
+    public void loginPageUITest() {
 
         openLoginPage();
 
@@ -66,9 +66,7 @@ public class TraditionalTests extends BaseTest {
 
         //15
         softAssert.assertThat(findElement(By.cssSelector("img[src='img/social-icons/linkedin.png']")) instanceof WebElement);
-        softAssert.assertAll();
     }
-    // 1 hour - along with initial framework setup
 
     @DataProvider(name = "loginData")
     private static Object[][] credentials() {
@@ -89,7 +87,7 @@ public class TraditionalTests extends BaseTest {
         findElement(By.id("log-in")).click();
 
         if (!username.isEmpty() && !password.isEmpty()) {
-            assertTrue(findElement(By.id("showExpensesChart")) instanceof WebElement);
+            assertTrue(findElement(By.id("logged-user-name")) instanceof WebElement);
             return;
         }
 
@@ -97,34 +95,6 @@ public class TraditionalTests extends BaseTest {
         assertTrue(errorElement instanceof WebElement);
         System.out.println(String.format("Error Msg: [%s]", errorElement.getText().trim()));
         assertTrue(errorElement.getText().trim().equals(errorMsg));
-    }
-
-    private List<Double> getAmountsAsList() {
-        List<WebElement> amountCol = findElements(By.cssSelector("table#transactionsTable tbody " +
-                "tr td:nth-child(5)"));
-
-        return amountCol
-                .stream().map(e -> Double.valueOf(e.getText()
-                        .replace("+ ", "").replace(",", "")
-                        .replace("- ", "-").split(" ")[0])).collect(Collectors.toList());
-
-    }
-
-    private List<String> getRowAsList() {
-        List<WebElement> rows = findElements(By.cssSelector("table#transactionsTable tbody tr"));
-
-        List myList = new ArrayList();
-
-        for (WebElement row : rows) {
-            String temp = "";
-            for (WebElement cell : row.findElements(By.cssSelector("td"))) {
-                temp += "-" + cell.getText();
-            }
-            myList.add(temp);
-        }
-
-        System.out.println("myList = " + myList);
-        return myList;
     }
 
     @Test
@@ -162,7 +132,7 @@ public class TraditionalTests extends BaseTest {
     }
 
     @Test
-    public void cavasTest() {
+    public void canvasTest() {
         openLoginPage();
         login();
 
@@ -180,8 +150,6 @@ public class TraditionalTests extends BaseTest {
         //https://github.com/vinsguru/ocular
 
         findElement(By.id("addDataset")).click();
-        softAssert.assertAll();
-
     }
 
     @Test
@@ -191,15 +159,51 @@ public class TraditionalTests extends BaseTest {
 
         login();
 
+        //Check Ad1 layout exits
         softAssert.assertThat(findElement(By.id("flashSale")) instanceof WebElement);
-        softAssert.assertThat(findElement(By.cssSelector("div#flashSale > img")) instanceof WebElement);
-        softAssert.assertThat(findElement(By.cssSelector("div#flashSale > img")).getAttribute("src").isEmpty());
 
+        //Check Ad1 img exits
+        boolean ad1ImgExits =
+                findElement(By.cssSelector("div#flashSale > img")) instanceof WebElement
+                        && !findElement(By.cssSelector("div#flashSale > img")).getAttribute("src").isEmpty();
+        softAssert.assertThat(ad1ImgExits);
+
+        //Check Ad2 layout exits
         softAssert.assertThat(findElement(By.id("flashSale2")) instanceof WebElement);
-        softAssert.assertThat(findElement(By.cssSelector("div#flashSale2 > img")) instanceof WebElement);
-        softAssert.assertThat(!findElement(By.cssSelector("div#flashSale2 > img")).getAttribute("src").isEmpty());
 
-        softAssert.assertAll();
+        //Check Ad2 img exits
+        boolean ad2ImgExits =
+                findElement(By.cssSelector("div#flashSale2 > img")) instanceof WebElement
+                        && !findElement(By.cssSelector("div#flashSale2 > img")).getAttribute("src").isEmpty();
+        softAssert.assertThat(ad2ImgExits);
 
+    }
+
+    private List<Double> getAmountsAsList() {
+        List<WebElement> amountCol = findElements(By.cssSelector("table#transactionsTable tbody " +
+                "tr td:nth-child(5)"));
+
+        return amountCol
+                .stream().map(e -> Double.valueOf(e.getText()
+                        .replace("+ ", "").replace(",", "")
+                        .replace("- ", "-").split(" ")[0])).collect(Collectors.toList());
+
+    }
+
+    private List<String> getRowAsList() {
+        List<WebElement> rows = findElements(By.cssSelector("table#transactionsTable tbody tr"));
+
+        List myList = new ArrayList();
+
+        for (WebElement row : rows) {
+            String temp = "";
+            for (WebElement cell : row.findElements(By.cssSelector("td"))) {
+                temp += "-" + cell.getText();
+            }
+            myList.add(temp);
+        }
+
+        System.out.println("myList = " + myList);
+        return myList;
     }
 }
