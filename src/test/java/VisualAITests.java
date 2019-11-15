@@ -47,7 +47,8 @@ public class VisualAITests extends BaseTest {
     @Test(dataProvider = "loginData")
     public void dataDrivenLoginTests(String username, String password, String errorMsg) {
         try {
-            openEyes("TestLogin-" + errorMsg.replace(" ", "-"), "param");
+            errorMsg = errorMsg.isEmpty()? "success" : errorMsg.replace(" ", "-");
+            openEyes("TestLogin-" + errorMsg , "param");
             openLoginPage();
 
             enterText(findElement(By.id("username")), username);
@@ -57,6 +58,7 @@ public class VisualAITests extends BaseTest {
             if (!username.isEmpty() && !password.isEmpty()) {
                 // Check-successful-login
                 eyes.checkRegion(new Region(14, 62, 172, 58), -1, "Check-successful-login");
+                eyes.close();
                 return;
             }
             eyes.checkWindow("Check-Error-Messages");
